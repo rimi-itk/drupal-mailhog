@@ -1,0 +1,5 @@
+name: 'MailHogger'
+type: module
+description: 'View MailHog messages'
+core: 8.x
+package: 'Custom'
