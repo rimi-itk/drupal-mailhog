@@ -78,46 +78,6 @@ class SettingsForm extends FormBase {
       ],
     ];
 
-    foreach ($this->settings->getOutgoingServers() as $key => $server) {
-      $form['outgoing_servers'][$key] = [
-        '#type' => 'group',
-
-        'name' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Name'),
-        ],
-        'host' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Host'),
-        ],
-        'port' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Port'),
-        ],
-        'email' => [
-          '#type' => 'email',
-          '#title' => $this->t('Email'),
-        ],
-        'username' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Username'),
-        ],
-        'password' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Password'),
-        ],
-        'mechanism' => [
-          '#title' => $this->t('Mechanism'),
-          '#type' => 'select',
-          '#options' => [
-            'PLAIN' => 'PLAIN',
-            'CRAM-MD5' => 'CRAM-MD5',
-          ],
-          '#empty_option' => '',
-        ],
-      ];
-    }
-
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),

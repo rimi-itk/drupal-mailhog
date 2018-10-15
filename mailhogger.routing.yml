@@ -1,10 +1,12 @@
 mailhogger.settings:
-  path: '/admin/mailhogger/settings'
+  path: '/admin/config/mailhogger/settings'
   defaults:
     _form: '\Drupal\mailhogger\Form\SettingsForm'
     _title: 'MailHogger settings'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
 
 mailhogger.message_list:
   path: '/mail/messages'
@@ -23,7 +25,7 @@ mailhogger.message_show:
     _permission: 'access content'
 
 mailhogger.message_release:
-  path: '/mail/messages/{id}/release/{server}'
+  path: '/mail/messages/{id}/release'
   defaults:
     _controller: '\Drupal\mailhogger\Controller\MessageController::releaseAction'
     _title: 'MailHog message details'

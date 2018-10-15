@@ -5,3 +5,9 @@ mailhogger.message_list:
   description: 'Mail messages'
   route_name: mailhogger.message_list
   weight: 1000
+
+mailhogger.settings:
+  title: 'Mailhogger settings'
+  parent: system.admin_config_development
+  description: 'Mailhogger settings'
+  route_name: mailhogger.settings

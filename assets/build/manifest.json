@@ -1,4 +1,5 @@
 {
-  "build/mailhogger.js": "/build/mailhogger.js",
-  "build/mailhogger.css": "/build/mailhogger.css"
+  "build/mailhogger.js": "./mailhogger.js",
+  "build/mailhogger.css": "./mailhogger.css",
+  "build/images/icon-email.svg": "./images/icon-email.3c801ea7.svg"
 }

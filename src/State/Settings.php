@@ -7,27 +7,26 @@ use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Database\Connection;
 
 /**
- *
+ * Mailhogger settings.
  */
 class Settings extends DatabaseStorage {
 
   /**
-   * @param \Drupal\Component\Serialization\SerializationInterface $serializer
-   * @param \Drupal\Core\Database\Connection $connection
+   * Constructor.
    */
   public function __construct(SerializationInterface $serializer, Connection $connection) {
     parent::__construct('mailhogger.settings', $serializer, $connection);
   }
 
   /**
-   *
+   * Get MailHog url.
    */
   public function getMailHogUrl() {
     return $this->get('mailhog_url', 'http://127.0.0.1:8025');
   }
 
   /**
-   *
+   * Get sender email.
    */
   public function getSenderEmail() {
     $email = $this->get('sender_email');
@@ -39,28 +38,10 @@ class Settings extends DatabaseStorage {
   }
 
   /**
+   * Get default sender email.
    *
-   */
-  public function getOutgoingServers() {
-    $servers = $this->get('outgoing_servers', []);
-
-    if (!isset($servers['default'])) {
-      $servers['default'] = [
-        'name' => '',
-        'host' => '',
-        'port' => '',
-        'email' => '',
-        'username' => '',
-        'password' => '',
-        'mechanism' => '',
-      ];
-    }
-
-    return $servers;
-  }
-
-  /**
-   *
+   * @return string[]
+   *   2-tuple (email, source).
    */
   public function getDefaultSenderEmail() {
     $email = \Drupal::config('smtp.settings')->get('smtp_from');

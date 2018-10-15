@@ -1,4 +1,27 @@
-.mail-messages-show {
+// https://drupalcommerce.org/blog/10943/how-create-drupal-8-toolbar-icon
+
+.toolbar-icon-mailhogger-message-list:before {
+  background-image: url(../images/icon-email.svg);
+}
+
+.mail-message-list {
+  td {
+    vertical-align: top;
+    padding: 0;
+  }
+
+  a {
+    display: block;
+    padding: 10px;
+    color: inherit;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.mail-message-show {
   dt {
     font-weight: bold;
   }
