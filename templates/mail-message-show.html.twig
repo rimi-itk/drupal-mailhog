@@ -1,23 +1,26 @@
-<div class="mail-messages-show">
+<div class="mail-message-show">
   <dl>
     <dt>{{ 'From'|t }}</dt>
     <dd>{{ message.Raw.From }}</dd>
 
     <dt>{{ 'To'|t }}</dt>
     <dd>
-      {% for to in message.Raw.To %}
-        {{ to }}
-        {% if not loop.last %}
-          <br/>
-        {% endif %}
-      {% endfor %}
+      <form method="post" action="{{ path('mailhogger.message_release', {id: message.ID}) }}">
+        {% for to in message.Raw.To %}
+          {{ to }}
+          <button class="button" type="submit" name="email" value="{{ to }}">{{ 'Release mail message to %to'|trans({'%to': to}) }}</button>
+          {% if not loop.last %}
+            <br/>
+          {% endif %}
+        {% endfor %}
+      </form>
     </dd>
 
     <dt>{{ 'Subject'|t }}</dt>
     <dd>{{ message.Content.Headers.Subject[0] }}</dd>
 
     <dt>{{ 'Date'|t }}</dt>
-    <dd>{{ message.Created|date }}</dd>
+    <dd>{{ message.Content.Headers.Date[0]|date }}</dd>
 
     <dt>{{ 'Content'|t }}</dt>
     <dd>
@@ -44,10 +47,13 @@
   </dl>
 
   <div class="actions">
-    <a href="{{ path('mailhogger.message_list') }}">{{ 'Back to the messages list'|t }}</a>
     <form method="post" action="{{ path('mailhogger.message_show', {id: message.ID}) }}">
-      <button type="submit" name="_method" value="DELETE">{{ 'Delete mail message'|trans }}</button>
-      <button type="submit" name="action" value="release">{{ 'Release mail message'|trans }}</button>
+      <button class="button" type="submit" name="_method" value="DELETE">{{ 'Delete mail message'|trans }}</button>
     </form>
+    <form method="post" action="{{ path('mailhogger.message_release', {id: message.ID}) }}">
+      <input class="form-email" type="email" name="email" placeholder="Email address" required/>
+      <button class="button" type="submit" name="action" value="release">{{ 'Release mail message'|trans }}</button>
+    </form>
+    <a class="button" href="{{ path('mailhogger.message_list') }}">{{ 'Back to the messages list'|t }}</a>
   </div>
 </div>

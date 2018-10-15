@@ -66,58 +66,6 @@ class SettingsForm extends FormBase {
       ]),
     ];
 
-    $form['outgoing_servers'] = [
-      '#title' => $this->t('Outgoing SMTP server'),
-      '#type' => 'fieldset',
-      '#tree' => TRUE,
-
-      'info' => [
-        '#markup' => $this->t('See <a href="@url">Outgoing SMTP configuration</a> in the MailHog documentation', [
-          '@url' => 'https://github.com/blueimp/mailhog/blob/master/docs/CONFIG.md#outgoing-smtp-configuration',
-        ]),
-      ],
-    ];
-
-    foreach ($this->settings->getOutgoingServers() as $key => $server) {
-      $form['outgoing_servers'][$key] = [
-        '#type' => 'group',
-
-        'name' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Name'),
-        ],
-        'host' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Host'),
-        ],
-        'port' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Port'),
-        ],
-        'email' => [
-          '#type' => 'email',
-          '#title' => $this->t('Email'),
-        ],
-        'username' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Username'),
-        ],
-        'password' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Password'),
-        ],
-        'mechanism' => [
-          '#title' => $this->t('Mechanism'),
-          '#type' => 'select',
-          '#options' => [
-            'PLAIN' => 'PLAIN',
-            'CRAM-MD5' => 'CRAM-MD5',
-          ],
-          '#empty_option' => '',
-        ],
-      ];
-    }
-
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),

@@ -24,6 +24,13 @@ function mailhogger_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_page_attachments().
+ */
+function mailhogger_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'mailhogger/mailhogger';
+}
+
+/**
  * Implements hook_theme().
  */
 function mailhogger_theme($existing, $type, $theme, $path) {
