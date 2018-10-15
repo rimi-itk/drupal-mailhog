@@ -1,0 +1,53 @@
+<div class="mail-messages-show">
+  <dl>
+    <dt>{{ 'From'|t }}</dt>
+    <dd>{{ message.Raw.From }}</dd>
+
+    <dt>{{ 'To'|t }}</dt>
+    <dd>
+      {% for to in message.Raw.To %}
+        {{ to }}
+        {% if not loop.last %}
+          <br/>
+        {% endif %}
+      {% endfor %}
+    </dd>
+
+    <dt>{{ 'Subject'|t }}</dt>
+    <dd>{{ message.Content.Headers.Subject[0] }}</dd>
+
+    <dt>{{ 'Date'|t }}</dt>
+    <dd>{{ message.Created|date }}</dd>
+
+    <dt>{{ 'Content'|t }}</dt>
+    <dd>
+      <div class="mail-message-body">
+
+        <ul class="nav nav-tabs">
+          {% for type, item in message.Bodies %}
+            <li class="nav-item">
+              <a class="nav-link {{ loop.first ? 'active' }}" href="#{{ type }}">{{ type }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+          {% for type, item in message.Bodies %}
+            <div class="tab-pane {{ loop.first ? 'active' }}" id="{{ type }}" role="tabpanel" aria-labelledby="{{ type }}-tab">
+              {{ item.Body|raw }}
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </dd>
+  </dl>
+
+  <div class="actions">
+    <a href="{{ path('mailhogger.message_list') }}">{{ 'Back to the messages list'|t }}</a>
+    <form method="post" action="{{ path('mailhogger.message_show', {id: message.ID}) }}">
+      <button type="submit" name="_method" value="DELETE">{{ 'Delete mail message'|trans }}</button>
+      <button type="submit" name="action" value="release">{{ 'Release mail message'|trans }}</button>
+    </form>
+  </div>
+</div>

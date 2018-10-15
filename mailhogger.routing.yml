@@ -1,0 +1,31 @@
+mailhogger.settings:
+  path: '/admin/mailhogger/settings'
+  defaults:
+    _form: '\Drupal\mailhogger\Form\SettingsForm'
+    _title: 'MailHogger settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+mailhogger.message_list:
+  path: '/mail/messages'
+  defaults:
+    _controller: '\Drupal\mailhogger\Controller\MessageController::cgetAction'
+    _title: 'Mail messages'
+  requirements:
+    _permission: 'access content'
+
+mailhogger.message_show:
+  path: '/mail/messages/{id}'
+  defaults:
+    _controller: '\Drupal\mailhogger\Controller\MessageController::getAction'
+    _title: 'Mail message details'
+  requirements:
+    _permission: 'access content'
+
+mailhogger.message_release:
+  path: '/mail/messages/{id}/release/{server}'
+  defaults:
+    _controller: '\Drupal\mailhogger\Controller\MessageController::releaseAction'
+    _title: 'MailHog message details'
+  requirements:
+    _permission: 'access content'

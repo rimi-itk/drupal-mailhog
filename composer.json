@@ -1,14 +1,32 @@
 {
-  "name": "drupal/mailhogger",
-  "type": "drupal-module",
-  "description": "View MailHog messages",
-  "keywords": ["Drupal"],
-  "license": "GPL-2.0+",
-  "homepage": "https://www.drupal.org/project/mailhogger",
-  "minimum-stability": "dev",
-  "support": {
-    "issues": "https://www.drupal.org/project/issues/mailhogger",
-    "source": "http://cgit.drupalcode.org/mailhogger"
-  },
-  "require": { }
+    "name": "drupal/mailhogger",
+    "type": "drupal-module",
+    "description": "View MailHog messages",
+    "keywords": ["Drupal"],
+    "license": "GPL-2.0+",
+    "homepage": "https://www.drupal.org/project/mailhogger",
+    "minimum-stability": "dev",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/mailhogger",
+        "source": "http://cgit.drupalcode.org/mailhogger"
+    },
+    "require": { },
+    "require-dev": {
+        "drupal/coder": "^8.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "dev-master"
+    },
+    "scripts": {
+        "check-coding-standards/phpcs": [
+            "vendor/bin/phpcs --standard=phpcs.xml.dist"
+        ],
+        "check-coding-standards": [
+            "@check-coding-standards/phpcs"
+        ],
+        "apply-coding-standards/phpcs": [
+            "vendor/bin/phpcbf --standard=phpcs.xml.dist"
+        ],
+        "apply-coding-standards": [
+            "@apply-coding-standards/phpcs"
+        ]
+    }
 }

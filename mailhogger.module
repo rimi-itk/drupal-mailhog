@@ -22,3 +22,17 @@ function mailhogger_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function mailhogger_theme($existing, $type, $theme, $path) {
+  return [
+    'mail_message_list' => [
+      'variables' => ['messages' => NULL],
+    ],
+    'mail_message_show' => [
+      'variables' => ['message' => NULL],
+    ],
+  ];
+}

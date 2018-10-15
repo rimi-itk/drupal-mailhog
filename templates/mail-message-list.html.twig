@@ -1,0 +1,31 @@
+<div class="mail-messages-list">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ 'From'|t }}</th>
+        <th>{{ 'To'|t }}</th>
+        <th>{{ 'Subject'|t }}</th>
+        <th>{{ 'Date'|t }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for message in messages.items %}
+        <tr>
+          <td>{{ message.Raw.From }}</td>
+          <td>
+            {% for to in message.Raw.To %}
+              {{ to }}
+              {% if not loop.last %}
+                <br/>
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td><a href="{{ path('mailhogger.message_show', {id: message.ID}) }}">{{ message.Content.Headers.Subject[0] }}</a></td>
+          <td>{{ message.Created|date }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <iframe name="message_show" src="about:blank" style="width: 100%; height: 20em"></iframe>
+</div>

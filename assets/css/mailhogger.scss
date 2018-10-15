@@ -1,0 +1,64 @@
+.mail-messages-show {
+  dt {
+    font-weight: bold;
+  }
+
+  fieldset {
+    display: none;
+
+    &:target {
+      display: block;
+    }
+  }
+}
+
+$primary-color: #000;
+
+.nav-tabs {
+  margin: 0;
+  padding: 0;
+
+  // @see https://css-tricks.com/snippets/css/clear-fix/
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .nav-item {
+    list-style: none;
+    float: left;
+    margin-bottom: -1px;
+    margin-right: 1em;
+
+    .nav-link {
+      padding: 0 1em;
+      color: inherit;
+      display: block;
+      border: solid 1px transparent;
+
+      &:hover {
+        background-color: lighten($primary-color, 75%);
+      }
+
+      &.active {
+        border-color: $primary-color;
+      }
+    }
+  }
+}
+
+.tab-content {
+  // clear: both;
+  // margin-top: -1px;
+
+  .tab-pane {
+    display: none;
+    border: solid 1px $primary-color;
+    padding: 1em;
+
+    &.active {
+      display: block;
+    }
+  }
+}
