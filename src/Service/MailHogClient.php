@@ -72,14 +72,17 @@ class MailHogClient {
   /**
    * Release a message.
    */
-  public function releaseMessage($id) {
+  public function releaseMessage($id, $email) {
     $servers = $this->getOutgoingServers();
     if (empty($servers)) {
       throw new \Exception('No outgoing servers defined.');
     }
     $server = reset($servers);
 
-    $this->post('api/v1/messages/{id}/release', ['id' => $id], $server);
+    $this->post('api/v1/messages/{id}/release', ['id' => $id], [
+      'name' => $server['Name'],
+      'email' => $email,
+    ]);
   }
 
   /**
