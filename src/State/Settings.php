@@ -2,20 +2,22 @@
 
 namespace Drupal\mailhogger\State;
 
-use Drupal\Core\KeyValueStore\DatabaseStorage;
-use Drupal\Component\Serialization\SerializationInterface;
-use Drupal\Core\Database\Connection;
-
 /**
  * Mailhogger settings.
  */
-class Settings extends DatabaseStorage {
+class Settings {
+
+  /**
+   * Create an instance of Settings.
+   */
+  public static function create() {
+    return new static();
+  }
 
   /**
    * Constructor.
    */
-  public function __construct(SerializationInterface $serializer, Connection $connection) {
-    parent::__construct('mailhogger.settings', $serializer, $connection);
+  public function __construct() {
   }
 
   /**
@@ -44,12 +46,21 @@ class Settings extends DatabaseStorage {
    *   2-tuple (email, source).
    */
   public function getDefaultSenderEmail() {
-    $email = \Drupal::config('smtp.settings')->get('smtp_from');
-    if (!empty($email)) {
-      return [$email, 'smtp setting'];
+    if (module_exists('smtp')) {
+      $email = variable_get('smtp_from');
+      if (!empty($email)) {
+        return [$email, 'smtp setting'];
+      }
     }
 
-    return [\Drupal::config('system.site')->get('mail'), 'system setting'];
+    return [variable_get('site_mail'), 'system setting'];
+  }
+
+  /**
+   * Get named value.
+   */
+  private function get($name, $default_value = NULL) {
+    return variable_get('mailhogger_' . $name, $default_value);
   }
 
 }

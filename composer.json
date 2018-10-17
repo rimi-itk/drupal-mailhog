@@ -10,7 +10,15 @@
         "issues": "https://www.drupal.org/project/issues/mailhogger",
         "source": "http://cgit.drupalcode.org/mailhogger"
     },
-    "require": { },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/7"
+        }
+    ],
+    "require": {
+        "drupal/xautoload": "5.x-dev"
+    },
     "require-dev": {
         "drupal/coder": "^8.3",
         "dealerdirect/phpcodesniffer-composer-installer": "dev-master"

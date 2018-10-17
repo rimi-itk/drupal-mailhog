@@ -10,14 +10,16 @@ window.addEventListener('load', function() {
     if (!this.classList.contains('active')) {
       // Mark all tabs as not active.
       this.parentNode.parentNode.querySelectorAll('.nav-link').forEach(function(el) {
+        el.parentNode.classList.remove('active')
         el.classList.remove('active')
       })
 
       // Hide all tab panes.
-      this.parentNode.parentNode.parentNode.querySelectorAll('.tab-pane').forEach(function(el) {
+      this.parentNode.parentNode.parentNode.parentNode.querySelectorAll('.tab-pane').forEach(function(el) {
         el.classList.remove('active')
       })
 
+      this.parentNode.classList.add('active')
       this.classList.add('active')
       const match = /#(.+)$/.exec(this.href)
       if (match) {

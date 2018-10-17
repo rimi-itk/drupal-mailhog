@@ -1,7 +1,0 @@
-mailhogger:
-  version: 1.x
-  css:
-    theme:
-      assets/build/mailhogger.css: {}
-  js:
-    assets/build/mailhogger.js: {}

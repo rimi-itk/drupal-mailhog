@@ -5,29 +5,140 @@
  * Contains mailhogger.module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\mailhogger\Controller\MessageController;
+use Drupal\mailhogger\State\Settings;
 
 /**
- * Implements hook_help().
+ * Implements hook_menu().
  */
-function mailhogger_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the mailhogger module.
-    case 'help.page.mailhogger':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('View MailHog messages') . '</p>';
-      return $output;
+function mailhogger_menu() {
+  $items['admin/config/development/mailhogger'] = [
+    'title' => 'Mailhogger',
+    'description' => 'Settings for the Mailhogger module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['mailhogger_admin'],
+    'access arguments' => ['administer site configuration'],
+    'type' => MENU_NORMAL_ITEM,
+  ];
 
-    default:
+  $items['admin/mail/messages/%/mime/part/%/download'] = [
+    'page callback' => 'mailhogger_message_mime_part_download',
+    'page arguments' => [3, 6],
+    'access arguments' => ['access content'],
+  ];
+
+  $items['admin/mail/messages/%/delete'] = [
+    'page callback' => 'mailhogger_message_delete',
+    'page arguments' => [3],
+    'access arguments' => ['access content'],
+  ];
+
+  $items['admin/mail/messages/%/release'] = [
+    'page callback' => 'mailhogger_message_release',
+    'page arguments' => [3],
+    'access arguments' => ['access content'],
+  ];
+
+  $items['admin/mail/messages/%'] = [
+    'page callback' => 'mailhogger_message_show',
+    'page arguments' => [3],
+    'access arguments' => ['access content'],
+  ];
+
+  $items['admin/mail/messages'] = [
+    'title' => 'Mail messages',
+    'page callback' => 'mailhogger_message_list',
+    'access arguments' => ['access content'],
+  ];
+
+  return $items;
+}
+
+/**
+ * Mailhogger admin settings form.
+ */
+function mailhogger_admin() {
+  $settings = Settings::create();
+  list($defaultSenderEmail, $defaultSenderEmailSource) = $settings->getDefaultSenderEmail();
+
+  $form['mailhogger_mailhog_url'] = [
+    '#title' => t('MailHog url'),
+    '#type' => 'textfield',
+    '#element_validate' => ['mailhogger_validate_url'],
+    '#required' => TRUE,
+    '#default_value' => $settings->getMailHogUrl(),
+    '#description' => t('MailHog url'),
+  ];
+
+  $form['mailhogger_sender_email'] = [
+    '#title' => t('Sender email'),
+    '#type' => 'textfield',
+    '#element_validate' => ['mailhogger_validate_email_address'],
+    '#attributes' => [
+      'type' => 'email',
+      'placeholder' => $defaultSenderEmail,
+    ],
+    '#default_value' => $settings->getSenderEmail(),
+    '#description' => t('Sender email address. If not set, %default_email (@default_email_source) will be used', [
+      '%default_email' => $defaultSenderEmail,
+      '@default_email_source' => $defaultSenderEmailSource,
+    ]),
+  ];
+
+  return system_settings_form($form);
+}
+
+/**
+ * Validate email address.
+ */
+function mailhogger_validate_email_address($element, &$form_state) {
+  if (!empty($element['#value']) && !valid_email_address($element['#value'])) {
+    form_error($element, t('Please enter a valid email adress'));
   }
 }
 
 /**
- * Implements hook_page_attachments().
+ * Validate url.
  */
-function mailhogger_page_attachments(array &$attachments) {
-  $attachments['#attached']['library'][] = 'mailhogger/mailhogger';
+function mailhogger_validate_url($element, &$form_state) {
+  if (!empty($element['#value']) && !valid_url($element['#value'], TRUE)) {
+    form_error($element, t('Please enter a valid url'));
+  }
+}
+
+/**
+ * Message list action.
+ */
+function mailhogger_message_list() {
+  return MessageController::create()->cgetAction();
+}
+
+/**
+ * Message show action.
+ */
+function mailhogger_message_show($id) {
+  return MessageController::create()->getAction($id);
+}
+
+/**
+ * Message release action.
+ */
+function mailhogger_message_release($id) {
+  return MessageController::create()->releaseAction($id);
+}
+
+/**
+ * Message delete action.
+ */
+function mailhogger_message_delete($id) {
+  return MessageController::create()->deleteAction($id);
+}
+
+/**
+ * Message mime part download action.
+ */
+function mailhogger_message_mime_part_download($id, $part) {
+  return MessageController::create()->mimePartDownloadAction($id, $part);
 }
 
 /**
@@ -36,10 +147,59 @@ function mailhogger_page_attachments(array &$attachments) {
 function mailhogger_theme($existing, $type, $theme, $path) {
   return [
     'mail_message_list' => [
+      'path' => drupal_get_path('module', 'mailhogger') . '/templates',
+      'template' => 'mail-message-list',
       'variables' => ['messages' => NULL],
     ],
     'mail_message_show' => [
+      'path' => drupal_get_path('module', 'mailhogger') . '/templates',
+      'template' => 'mail-message-show',
       'variables' => ['message' => NULL],
     ],
   ];
+}
+
+/**
+ * Implements hook_library().
+ */
+function mailhogger_library() {
+  $module_path = drupal_get_path('module', 'mailhogger');
+
+  return [
+    'mailhogger' => [
+      'title' => 'Mailhogger',
+      'version' => '1.0',
+      'css' => [
+        $module_path . '/assets/build/mailhogger.css' => [],
+      ],
+      'js' => [
+        $module_path . '/assets/build/mailhogger.js' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Get path from mailhogger route name.
+ */
+function mailhogger_path($route, array $query = []) {
+  switch ($route) {
+    case 'mailhogger.message_list':
+      return '/admin/mail/messages';
+
+    case 'mailhogger.message_show':
+      return '/admin/mail/messages/' . $query['id'];
+
+    case 'mailhogger.message_delete':
+      return '/admin/mail/messages/' . $query['id'] . '/delete';
+
+    case 'mailhogger.message_release':
+      return '/admin/mail/messages/' . $query['id'] . '/release';
+
+    case 'mailhogger.message_part_download':
+      return '/admin/mail/messages/' . $query['id'] . '/mime/part/' . $query['part'] . '/download';
+
+  }
+
+  throw new \Exception('Invalid route: ' . $route);
 }

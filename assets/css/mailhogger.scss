@@ -1,5 +1,13 @@
-// https://drupalcommerce.org/blog/10943/how-create-drupal-8-toolbar-icon
+// @see https://css-tricks.com/snippets/css/clear-fix/
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
 
+// https://drupalcommerce.org/blog/10943/how-create-drupal-8-toolbar-icon
 .toolbar-icon-mailhogger-message-list:before {
   background-image: url(../images/icon-email.svg);
 }
@@ -22,54 +30,69 @@
 }
 
 .mail-message-show {
-  dt {
-    font-weight: bold;
+  .message-value {
+    margin-bottom: 1em;
   }
 
-  fieldset {
-    display: none;
+  .message-body {
+    background: #eee;
+    padding: 1em;
+  }
 
-    &:target {
-      display: block;
-    }
+  .message-value.message-source,
+  .message-value.type-text-plain {
+    white-space: pre;
+    font-family: monospace;
+  }
+
+  // .tabs {
+  //   @include clearfix;
+
+  //   &.primary {
+  //     float: none;
+  //   }
+  // }
+
+  .tab-content {
+    clear: both;
   }
 }
 
 $primary-color: #000;
 
-.nav-tabs {
-  margin: 0;
-  padding: 0;
+// .nav-tabs {
+//   margin: 0;
+//   padding: 0;
 
-  // @see https://css-tricks.com/snippets/css/clear-fix/
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
+//   // @see https://css-tricks.com/snippets/css/clear-fix/
+//   &:after {
+//     content: "";
+//     display: table;
+//     clear: both;
+//   }
 
-  .nav-item {
-    list-style: none;
-    float: left;
-    margin-bottom: -1px;
-    margin-right: 1em;
+//   .nav-item {
+//     list-style: none;
+//     float: left;
+//     margin-bottom: -1px;
+//     margin-right: 1em;
 
-    .nav-link {
-      padding: 0 1em;
-      color: inherit;
-      display: block;
-      border: solid 1px transparent;
+//     .nav-link {
+//       padding: 0 1em;
+//       color: inherit;
+//       display: block;
+//       border: solid 1px transparent;
 
-      &:hover {
-        background-color: lighten($primary-color, 75%);
-      }
+//       &:hover {
+//         background-color: lighten($primary-color, 75%);
+//       }
 
-      &.active {
-        border-color: $primary-color;
-      }
-    }
-  }
-}
+//       &.active {
+//         border-color: $primary-color;
+//       }
+//     }
+//   }
+// }
 
 .tab-content {
   // clear: both;
@@ -77,8 +100,8 @@ $primary-color: #000;
 
   .tab-pane {
     display: none;
-    border: solid 1px $primary-color;
-    padding: 1em;
+    // border: solid 1px $primary-color;
+    // padding: 1em;
 
     &.active {
       display: block;

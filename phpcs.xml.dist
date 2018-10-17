@@ -4,6 +4,7 @@
 
   <file>mailhogger.module</file>
   <file>src/</file>
+  <file>templates/</file>
 
   <arg value="p"/>
 

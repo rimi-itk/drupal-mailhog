@@ -1,0 +1,7 @@
+name = MailHogger
+type =  module
+description = View MailHog messages
+core = 7.x
+configure = admin/config/mailhogger/settings
+dependencies[] = xautoload
+

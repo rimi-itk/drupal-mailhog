@@ -3,7 +3,6 @@
 namespace Drupal\mailhogger\Service;
 
 use Drupal\mailhogger\State\Settings;
-use GuzzleHttp\Client;
 
 /**
  * MailHog client (api wrapper).
@@ -17,25 +16,17 @@ class MailHogClient {
   protected $settings;
 
   /**
-   * The Guzzle client.
-   *
-   * @var \GuzzleHttp\Client
-   */
-  protected $client;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(Settings $settings, Client $client) {
+  public function __construct(Settings $settings) {
     $this->settings = $settings;
-    $this->client = $client;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('mailhogger.settings'));
+  public static function create() {
+    return new static(Settings::create());
   }
 
   /**
@@ -66,7 +57,9 @@ class MailHogClient {
    */
   public function deleteMessage($id) {
     $url = $this->buildUrl('api/v1/messages/{id}', ['id' => $id]);
-    $this->client->delete($url);
+    drupal_http_request($url, [
+      'method' => 'DELETE',
+    ]);
   }
 
   /**
@@ -134,9 +127,9 @@ class MailHogClient {
    */
   private function get($path, array $query = []) {
     $url = $this->buildUrl($path, $query);
-    $request = $this->client->get($url);
+    $response = drupal_http_request($url);
 
-    return json_decode($request->getBody(), TRUE);
+    return json_decode($response->data, TRUE);
   }
 
   /**
@@ -144,11 +137,12 @@ class MailHogClient {
    */
   private function post($path, array $query, array $data) {
     $url = $this->buildUrl($path, $query);
-    $request = $this->client->post($url, [
-      'json' => $data,
+    $response = drupal_http_request($url, [
+      'method' => 'POST',
+      'data' => json_encode($data),
     ]);
 
-    return json_decode($request->getBody(), TRUE);
+    return json_decode($response->data, TRUE);
   }
 
 }

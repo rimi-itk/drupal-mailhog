@@ -2,21 +2,18 @@
 
 namespace Drupal\mailhogger\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\mailhogger\Service\MailHogClient;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
- * An example controller.
+ * Message controller.
  */
-class MessageController extends ControllerBase {
+class MessageController {
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('mailhogger.mailhog_client'));
+  public static function create() {
+    return new static(MailHogClient::create());
   }
 
   /**
@@ -43,7 +40,7 @@ class MessageController extends ControllerBase {
       '#theme' => 'mail_message_list',
       '#messages' => $messages,
       '#attached' => [
-        'library' => ['mailhogger/mailhogger'],
+        'library' => [['mailhogger', 'mailhogger']],
       ],
       '#cache' => ['max-age' => 0],
     ];
@@ -52,19 +49,14 @@ class MessageController extends ControllerBase {
   /**
    * Single message.
    */
-  public function getAction(Request $request, $id) {
-    $method = $request->get('_method', $request->getMethod());
-    if ('DELETE' === $method) {
-      return $this->deleteAction($request, $id);
-    }
-
+  public function getAction($id) {
     $message = $this->client->getMessage($id);
 
     return [
       '#theme' => 'mail_message_show',
       '#message' => $message,
       '#attached' => [
-        'library' => ['mailhogger/mailhogger'],
+        'library' => [['mailhogger', 'mailhogger']],
       ],
       '#cache' => ['max-age' => 0],
     ];
@@ -73,32 +65,51 @@ class MessageController extends ControllerBase {
   /**
    * Delete action.
    */
-  public function deleteAction(Request $request, $id) {
+  public function deleteAction($id) {
     try {
       $this->client->deleteMessage($id);
-      $this->messenger()->addStatus($this->t('Mail message deleted'));
+      drupal_set_message(t('Mail message deleted'));
     }
     catch (\Exception $exception) {
-      $this->messenger()->addError($this->t('Error deleting mail message: @message', ['@message' => $exception->getMessage()]));
+      drupal_set_message(t('Error deleting mail message: @message', ['@message' => $exception->getMessage()]), 'error');
     }
 
-    return $this->cgetAction($request, $id);
+    return $this->cgetAction();
   }
 
   /**
    * Release action.
    */
-  public function releaseAction(Request $request, $id) {
+  public function releaseAction($id) {
     try {
-      $email = $request->get('email');
+      $email = isset($_POST['email']) ? $_POST['email'] : NULL;
       $this->client->releaseMessage($id, $email);
-      $this->messenger()->addStatus($this->t('Mail message released to %email.', ['%email' => $email]));
+      drupal_set_message(t('Mail message released to %email.', ['%email' => $email]));
     }
     catch (\Exception $exception) {
-      $this->messenger()->addError($this->t('Error releasing mail message: @message', ['@message' => $exception->getMessage()]));
+      drupal_set_message(t('Error releasing mail message: @message', ['@message' => $exception->getMessage()]), 'error');
     }
 
-    return $this->redirect('mailhogger.message_show', ['id' => $id]);
+    return drupal_goto(mailhogger_path('mailhogger.message_show', ['id' => $id]));
+  }
+
+  /**
+   * Mime part download action.
+   */
+  public function mimePartDownloadAction($id, $partIndex) {
+    $message = $this->client->getMessage($id);
+    if (!isset($message['MIME']['Parts'][$partIndex])) {
+      throw new \Exception(__METHOD__);
+    }
+
+    $part = $message['MIME']['Parts'][$partIndex];
+    $filename = $id . '-part-' . $partIndex;
+    foreach ($part['Headers'] as $name => $values) {
+      header($name . ': ' . implode(',', $values));
+    }
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    echo $part['Body'];
+    exit;
   }
 
 }
