@@ -21,31 +21,31 @@ function mailhog_menu() {
     'type' => MENU_NORMAL_ITEM,
   ];
 
-  $items['admin/mail/messages/%/mime/part/%/download'] = [
+  $items['admin/mailhog/messages/%/mime/part/%/download'] = [
     'page callback' => 'mailhog_message_mime_part_download',
     'page arguments' => [3, 6],
     'access arguments' => ['access content'],
   ];
 
-  $items['admin/mail/messages/%/delete'] = [
+  $items['admin/mailhog/messages/%/delete'] = [
     'page callback' => 'mailhog_message_delete',
     'page arguments' => [3],
     'access arguments' => ['access content'],
   ];
 
-  $items['admin/mail/messages/%/release'] = [
+  $items['admin/mailhog/messages/%/release'] = [
     'page callback' => 'mailhog_message_release',
     'page arguments' => [3],
     'access arguments' => ['access content'],
   ];
 
-  $items['admin/mail/messages/%'] = [
+  $items['admin/mailhog/messages/%'] = [
     'page callback' => 'mailhog_message_show',
     'page arguments' => [3],
     'access arguments' => ['access content'],
   ];
 
-  $items['admin/mail/messages'] = [
+  $items['admin/mailhog/messages'] = [
     'title' => 'Mail messages',
     'page callback' => 'mailhog_message_list',
     'access arguments' => ['access content'],
@@ -185,19 +185,19 @@ function mailhog_library() {
 function mailhog_path($route, array $query = []) {
   switch ($route) {
     case 'mailhog.message_list':
-      return '/admin/mail/messages';
+      return '/admin/mailhog/messages';
 
     case 'mailhog.message_show':
-      return '/admin/mail/messages/' . $query['id'];
+      return '/admin/mailhog/messages/' . $query['id'];
 
     case 'mailhog.message_delete':
-      return '/admin/mail/messages/' . $query['id'] . '/delete';
+      return '/admin/mailhog/messages/' . $query['id'] . '/delete';
 
     case 'mailhog.message_release':
-      return '/admin/mail/messages/' . $query['id'] . '/release';
+      return '/admin/mailhog/messages/' . $query['id'] . '/release';
 
     case 'mailhog.message_part_download':
-      return '/admin/mail/messages/' . $query['id'] . '/mime/part/' . $query['part'] . '/download';
+      return '/admin/mailhog/messages/' . $query['id'] . '/mime/part/' . $query['part'] . '/download';
 
   }
 

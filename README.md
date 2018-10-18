@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-cd web/sites/all/modules/contrib
+cd web/sites/all/modules/custom
 git clone --branch 7.x https://github.com/rimi-itk/drupal-mailhog mailhog
 ```
 
