@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\mailhogger\State;
+namespace Drupal\mailhog\State;
 
 /**
- * Mailhogger settings.
+ * Mailhog settings.
  */
 class Settings {
 
@@ -60,7 +60,7 @@ class Settings {
    * Get named value.
    */
   private function get($name, $default_value = NULL) {
-    return variable_get('mailhogger_' . $name, $default_value);
+    return variable_get('mailhog_' . $name, $default_value);
   }
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\mailhogger\Service;
+namespace Drupal\mailhog\Service;
 
-use Drupal\mailhogger\State\Settings;
+use Drupal\mailhog\State\Settings;
 
 /**
  * MailHog client (api wrapper).
@@ -11,7 +11,7 @@ class MailHogClient {
   /**
    * Settings.
    *
-   * @var \Drupal\mailhogger\State\Settings
+   * @var \Drupal\mailhog\State\Settings
    */
   protected $settings;
 

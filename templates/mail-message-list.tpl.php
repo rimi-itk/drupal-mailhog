@@ -17,7 +17,7 @@
     </thead>
     <tbody>
       <?php foreach ($messages['items'] as $message): ?>
-        <?php $show_url = mailhogger_path('mailhogger.message_show', ['id' => $message['ID']]); ?>
+        <?php $show_url = mailhog_path('mailhog.message_show', ['id' => $message['ID']]); ?>
         <tr>
           <td><a href="<?php echo $show_url; ?>"><?php echo $message['Raw']['From']; ?></a></td>
           <td>

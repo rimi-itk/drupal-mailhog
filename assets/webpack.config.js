@@ -5,7 +5,7 @@ Encore
     .setOutputPath('build/')
     .setPublicPath('./')
     .setManifestKeyPrefix('build/')
-    .addEntry('mailhogger', './js/mailhogger.js')
+    .addEntry('mailhog', './js/mailhog.js')
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())
     .enableSassLoader()

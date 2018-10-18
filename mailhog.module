@@ -2,52 +2,52 @@
 
 /**
  * @file
- * Contains mailhogger.module.
+ * Contains mailhog.module.
  */
 
-use Drupal\mailhogger\Controller\MessageController;
-use Drupal\mailhogger\State\Settings;
+use Drupal\mailhog\Controller\MessageController;
+use Drupal\mailhog\State\Settings;
 
 /**
  * Implements hook_menu().
  */
-function mailhogger_menu() {
-  $items['admin/config/development/mailhogger'] = [
-    'title' => 'Mailhogger',
-    'description' => 'Settings for the Mailhogger module',
+function mailhog_menu() {
+  $items['admin/config/development/mailhog'] = [
+    'title' => 'MailHog',
+    'description' => 'Settings for the MailHog module',
     'page callback' => 'drupal_get_form',
-    'page arguments' => ['mailhogger_admin'],
+    'page arguments' => ['mailhog_admin'],
     'access arguments' => ['administer site configuration'],
     'type' => MENU_NORMAL_ITEM,
   ];
 
   $items['admin/mail/messages/%/mime/part/%/download'] = [
-    'page callback' => 'mailhogger_message_mime_part_download',
+    'page callback' => 'mailhog_message_mime_part_download',
     'page arguments' => [3, 6],
     'access arguments' => ['access content'],
   ];
 
   $items['admin/mail/messages/%/delete'] = [
-    'page callback' => 'mailhogger_message_delete',
+    'page callback' => 'mailhog_message_delete',
     'page arguments' => [3],
     'access arguments' => ['access content'],
   ];
 
   $items['admin/mail/messages/%/release'] = [
-    'page callback' => 'mailhogger_message_release',
+    'page callback' => 'mailhog_message_release',
     'page arguments' => [3],
     'access arguments' => ['access content'],
   ];
 
   $items['admin/mail/messages/%'] = [
-    'page callback' => 'mailhogger_message_show',
+    'page callback' => 'mailhog_message_show',
     'page arguments' => [3],
     'access arguments' => ['access content'],
   ];
 
   $items['admin/mail/messages'] = [
     'title' => 'Mail messages',
-    'page callback' => 'mailhogger_message_list',
+    'page callback' => 'mailhog_message_list',
     'access arguments' => ['access content'],
   ];
 
@@ -55,31 +55,31 @@ function mailhogger_menu() {
 }
 
 /**
- * Mailhogger admin settings form.
+ * Mailhog admin settings form.
  */
-function mailhogger_admin() {
+function mailhog_admin() {
   $settings = Settings::create();
   list($defaultSenderEmail, $defaultSenderEmailSource) = $settings->getDefaultSenderEmail();
 
-  $form['mailhogger_mailhog_url'] = [
+  $form['mailhog_mailhog_url'] = [
     '#title' => t('MailHog url'),
     '#type' => 'textfield',
-    '#element_validate' => ['mailhogger_validate_url'],
+    '#element_validate' => ['mailhog_validate_url'],
     '#required' => TRUE,
     '#default_value' => $settings->getMailHogUrl(),
     '#description' => t('MailHog url'),
   ];
 
-  $form['mailhogger_sender_email'] = [
+  $form['mailhog_sender_email'] = [
     '#title' => t('Sender email'),
     '#type' => 'textfield',
-    '#element_validate' => ['mailhogger_validate_email_address'],
+    '#element_validate' => ['mailhog_validate_email_address'],
     '#attributes' => [
       'type' => 'email',
       'placeholder' => $defaultSenderEmail,
     ],
     '#default_value' => $settings->getSenderEmail(),
-    '#description' => t('Sender email address. If not set, %default_email (@default_email_source) will be used', [
+    '#description' => t('Only email sent from this address will be shown. If not set, %default_email (@default_email_source) will be used', [
       '%default_email' => $defaultSenderEmail,
       '@default_email_source' => $defaultSenderEmailSource,
     ]),
@@ -91,7 +91,7 @@ function mailhogger_admin() {
 /**
  * Validate email address.
  */
-function mailhogger_validate_email_address($element, &$form_state) {
+function mailhog_validate_email_address($element, &$form_state) {
   if (!empty($element['#value']) && !valid_email_address($element['#value'])) {
     form_error($element, t('Please enter a valid email adress'));
   }
@@ -100,7 +100,7 @@ function mailhogger_validate_email_address($element, &$form_state) {
 /**
  * Validate url.
  */
-function mailhogger_validate_url($element, &$form_state) {
+function mailhog_validate_url($element, &$form_state) {
   if (!empty($element['#value']) && !valid_url($element['#value'], TRUE)) {
     form_error($element, t('Please enter a valid url'));
   }
@@ -109,50 +109,50 @@ function mailhogger_validate_url($element, &$form_state) {
 /**
  * Message list action.
  */
-function mailhogger_message_list() {
+function mailhog_message_list() {
   return MessageController::create()->cgetAction();
 }
 
 /**
  * Message show action.
  */
-function mailhogger_message_show($id) {
+function mailhog_message_show($id) {
   return MessageController::create()->getAction($id);
 }
 
 /**
  * Message release action.
  */
-function mailhogger_message_release($id) {
+function mailhog_message_release($id) {
   return MessageController::create()->releaseAction($id);
 }
 
 /**
  * Message delete action.
  */
-function mailhogger_message_delete($id) {
+function mailhog_message_delete($id) {
   return MessageController::create()->deleteAction($id);
 }
 
 /**
  * Message mime part download action.
  */
-function mailhogger_message_mime_part_download($id, $part) {
+function mailhog_message_mime_part_download($id, $part) {
   return MessageController::create()->mimePartDownloadAction($id, $part);
 }
 
 /**
  * Implements hook_theme().
  */
-function mailhogger_theme($existing, $type, $theme, $path) {
+function mailhog_theme($existing, $type, $theme, $path) {
   return [
     'mail_message_list' => [
-      'path' => drupal_get_path('module', 'mailhogger') . '/templates',
+      'path' => drupal_get_path('module', 'mailhog') . '/templates',
       'template' => 'mail-message-list',
       'variables' => ['messages' => NULL],
     ],
     'mail_message_show' => [
-      'path' => drupal_get_path('module', 'mailhogger') . '/templates',
+      'path' => drupal_get_path('module', 'mailhog') . '/templates',
       'template' => 'mail-message-show',
       'variables' => ['message' => NULL],
     ],
@@ -162,41 +162,41 @@ function mailhogger_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_library().
  */
-function mailhogger_library() {
-  $module_path = drupal_get_path('module', 'mailhogger');
+function mailhog_library() {
+  $module_path = drupal_get_path('module', 'mailhog');
 
   return [
-    'mailhogger' => [
-      'title' => 'Mailhogger',
+    'mailhog' => [
+      'title' => 'Mailhog',
       'version' => '1.0',
       'css' => [
-        $module_path . '/assets/build/mailhogger.css' => [],
+        $module_path . '/assets/build/mailhog.css' => [],
       ],
       'js' => [
-        $module_path . '/assets/build/mailhogger.js' => [],
+        $module_path . '/assets/build/mailhog.js' => [],
       ],
     ],
   ];
 }
 
 /**
- * Get path from mailhogger route name.
+ * Get path from mailhog route name.
  */
-function mailhogger_path($route, array $query = []) {
+function mailhog_path($route, array $query = []) {
   switch ($route) {
-    case 'mailhogger.message_list':
+    case 'mailhog.message_list':
       return '/admin/mail/messages';
 
-    case 'mailhogger.message_show':
+    case 'mailhog.message_show':
       return '/admin/mail/messages/' . $query['id'];
 
-    case 'mailhogger.message_delete':
+    case 'mailhog.message_delete':
       return '/admin/mail/messages/' . $query['id'] . '/delete';
 
-    case 'mailhogger.message_release':
+    case 'mailhog.message_release':
       return '/admin/mail/messages/' . $query['id'] . '/release';
 
-    case 'mailhogger.message_part_download':
+    case 'mailhog.message_part_download':
       return '/admin/mail/messages/' . $query['id'] . '/mime/part/' . $query['part'] . '/download';
 
   }

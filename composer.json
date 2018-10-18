@@ -1,14 +1,14 @@
 {
-    "name": "drupal/mailhogger",
+    "name": "drupal/mailhog",
     "type": "drupal-module",
     "description": "View MailHog messages",
     "keywords": ["Drupal"],
     "license": "GPL-2.0+",
-    "homepage": "https://www.drupal.org/project/mailhogger",
+    "homepage": "https://www.drupal.org/project/mailhog",
     "minimum-stability": "dev",
     "support": {
-        "issues": "https://www.drupal.org/project/issues/mailhogger",
-        "source": "http://cgit.drupalcode.org/mailhogger"
+        "issues": "https://www.drupal.org/project/issues/mailhog",
+        "source": "http://cgit.drupalcode.org/mailhog"
     },
     "repositories": [
         {

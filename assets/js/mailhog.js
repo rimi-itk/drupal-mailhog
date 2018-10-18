@@ -3,7 +3,7 @@ const imagesContext = require.context('../images', true, /\.(png|jpg|jpeg|gif|ic
 imagesContext.keys().forEach(imagesContext);
 
 // require('../images/icon-email.svg');
-require('../css/mailhogger.scss');
+require('../css/mailhog.scss');
 
 window.addEventListener('load', function() {
   var showTab = function() {

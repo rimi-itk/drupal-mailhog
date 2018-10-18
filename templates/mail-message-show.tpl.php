@@ -7,14 +7,14 @@
 ?>
 <div class="mail-message-show">
   <div class="actions">
-    <form method="post" action="<?php echo mailhogger_path('mailhogger.message_delete', ['id' => $message['ID']]); ?>">
+    <form method="post" action="<?php echo mailhog_path('mailhog.message_delete', ['id' => $message['ID']]); ?>">
       <button class="button" type="submit" name="_method" value="DELETE"><?php echo t('Delete mail message'); ?></button>
     </form>
-    <form method="post" action="<?php echo mailhogger_path('mailhogger.message_release', ['id' => $message['ID']]); ?>">
+    <form method="post" action="<?php echo mailhog_path('mailhog.message_release', ['id' => $message['ID']]); ?>">
       <input class="form-email" type="email" name="email" placeholder="Email address" required/>
       <button class="button" type="submit" name="action" value="release"><?php echo t('Release mail message'); ?></button>
     </form>
-    <a class="button" href="<?php echo mailhogger_path('mailhogger.message_list'); ?>"><?php echo t('Back to the messages list'); ?></a>
+    <a class="button" href="<?php echo mailhog_path('mailhog.message_list'); ?>"><?php echo t('Back to the messages list'); ?></a>
   </div>
 
   <table class="mail-header">
@@ -26,7 +26,7 @@
     <tr>
       <th class="message-label"><?php echo t('To'); ?></th>
       <td class="message-value">
-        <form method="post" action="<?php echo mailhogger_path('mailhogger.message_release', ['id' => $message['ID']]) ?>">
+        <form method="post" action="<?php echo mailhog_path('mailhog.message_release', ['id' => $message['ID']]) ?>">
           <?php foreach ($message['Raw']['To'] as $to): ?>
             <?php echo $to; ?>
             <button class="button mail-recipient" type="submit" name="email" value="<?php echo $to; ?>" title="<?php echo t('Release mail message to @to', ['@to' => $to]); ?>"><?php echo t('Send as mail'); ?></button>
@@ -84,7 +84,7 @@
             <?php if ($index > 0): ?>
               <br/>
             <?php endif ?>
-            <a class="button" href="<?php echo mailhogger_path('mailhogger.message_part_download', ['id' => $message['ID'], 'part' => $index]); ?>"><?php echo t('Download part'); ?></a>
+            <a class="button" href="<?php echo mailhog_path('mailhog.message_part_download', ['id' => $message['ID'], 'part' => $index]); ?>"><?php echo t('Download part'); ?></a>
             <?php echo isset($part['Headers']['Content-Type']) ? implode(',', $part['Headers']['Content-Type']) : t('Unknown type'); ?>
             <?php $size = isset($part['Size']) ? (int) $part['Size'] : 0; ?>
             <?php echo ' (' . t('@size bytes', ['@size' => $size]) . ')'; ?>

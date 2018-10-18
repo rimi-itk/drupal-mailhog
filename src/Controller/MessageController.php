@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\mailhogger\Controller;
+namespace Drupal\mailhog\Controller;
 
-use Drupal\mailhogger\Service\MailHogClient;
+use Drupal\mailhog\Service\MailHogClient;
 
 /**
  * Message controller.
@@ -19,7 +19,7 @@ class MessageController {
   /**
    * The MailHog client.
    *
-   * @var \Drupal\mailhogger\Service\MailHogClient
+   * @var \Drupal\mailhog\Service\MailHogClient
    */
   private $client;
 
@@ -40,7 +40,7 @@ class MessageController {
       '#theme' => 'mail_message_list',
       '#messages' => $messages,
       '#attached' => [
-        'library' => [['mailhogger', 'mailhogger']],
+        'library' => [['mailhog', 'mailhog']],
       ],
       '#cache' => ['max-age' => 0],
     ];
@@ -56,7 +56,7 @@ class MessageController {
       '#theme' => 'mail_message_show',
       '#message' => $message,
       '#attached' => [
-        'library' => [['mailhogger', 'mailhogger']],
+        'library' => [['mailhog', 'mailhog']],
       ],
       '#cache' => ['max-age' => 0],
     ];
@@ -90,7 +90,7 @@ class MessageController {
       drupal_set_message(t('Error releasing mail message: @message', ['@message' => $exception->getMessage()]), 'error');
     }
 
-    return drupal_goto(mailhogger_path('mailhogger.message_show', ['id' => $id]));
+    return drupal_goto(mailhog_path('mailhog.message_show', ['id' => $id]));
   }
 
   /**
