@@ -117,6 +117,7 @@ function mailhog_message_list() {
  * Message show action.
  */
 function mailhog_message_show($id) {
+  $id = mailhog_decode_id($id);
   return MessageController::create()->getAction($id);
 }
 
@@ -124,6 +125,7 @@ function mailhog_message_show($id) {
  * Message release action.
  */
 function mailhog_message_release($id) {
+  $id = mailhog_decode_id($id);
   return MessageController::create()->releaseAction($id);
 }
 
@@ -131,6 +133,7 @@ function mailhog_message_release($id) {
  * Message delete action.
  */
 function mailhog_message_delete($id) {
+  $id = mailhog_decode_id($id);
   return MessageController::create()->deleteAction($id);
 }
 
@@ -138,25 +141,8 @@ function mailhog_message_delete($id) {
  * Message mime part download action.
  */
 function mailhog_message_mime_part_download($id, $part) {
+  $id = mailhog_decode_id($id);
   return MessageController::create()->mimePartDownloadAction($id, $part);
-}
-
-/**
- * Implements hook_theme().
- */
-function mailhog_theme($existing, $type, $theme, $path) {
-  return [
-    'mail_message_list' => [
-      'path' => drupal_get_path('module', 'mailhog') . '/templates',
-      'template' => 'mail-message-list',
-      'variables' => ['messages' => NULL],
-    ],
-    'mail_message_show' => [
-      'path' => drupal_get_path('module', 'mailhog') . '/templates',
-      'template' => 'mail-message-show',
-      'variables' => ['message' => NULL],
-    ],
-  ];
 }
 
 /**
@@ -183,6 +169,10 @@ function mailhog_library() {
  * Get path from mailhog route name.
  */
 function mailhog_path($route, array $query = []) {
+  if (isset($query['id'])) {
+    $query['id'] = mailhog_encode_id($query['id']);
+  }
+
   switch ($route) {
     case 'mailhog.message_list':
       return '/admin/mailhog/messages';
@@ -202,4 +192,18 @@ function mailhog_path($route, array $query = []) {
   }
 
   throw new \Exception('Invalid route: ' . $route);
+}
+
+/**
+ * Encode id.
+ */
+function mailhog_encode_id($id) {
+  return base64_encode($id);
+}
+
+/**
+ * Decode id.
+ */
+function mailhog_decode_id($id) {
+  return base64_decode($id);
 }

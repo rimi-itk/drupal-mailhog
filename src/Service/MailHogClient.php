@@ -2,6 +2,8 @@
 
 namespace Drupal\mailhog\Service;
 
+use Drupal\mailhog\Entity\MessageList;
+use Drupal\mailhog\Entity\Message;
 use Drupal\mailhog\State\Settings;
 
 /**
@@ -37,10 +39,8 @@ class MailHogClient {
       'kind' => 'from',
       'query' => $this->settings->getSenderEmail(),
     ]);
-    $items = &$messages['items'];
-    array_map([$this, 'processMessage'], $items);
 
-    return $messages;
+    return new MessageList($messages);
   }
 
   /**
@@ -49,7 +49,7 @@ class MailHogClient {
   public function getMessage($id) {
     $message = $this->get('api/v1/messages/{id}', ['id' => $id]);
 
-    return $this->processMessage($message);
+    return new Message($message);
   }
 
   /**
@@ -111,7 +111,7 @@ class MailHogClient {
     $url = $baseUrl . $path;
     $url = preg_replace_callback('/\{(?P<key>[^\}]+)\}/', function ($matches) use (&$parameters) {
       $key = $matches['key'];
-      $value = $parameters[$key] ?? $key;
+      $value = isset($parameters[$key]) ? $parameters[$key] : $key;
       unset($parameters[$key]);
 
       return $value;
